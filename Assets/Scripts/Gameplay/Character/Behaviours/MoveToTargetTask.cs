@@ -3,22 +3,48 @@ using UnityEngine;
 
 namespace ArkheroClone.Gameplay.Characters.Behaviours
 {
-    public class MoveToTargetTask : BehaviourNode
+    public sealed class MoveToTargetTask : BehaviourNode
     {
         private readonly ITargetMover _targetMover;
         private readonly Vector3 _targetPosition;
 
-        public MoveToTargetTask(ITargetMover mover, Vector3 targetPosition)
+        public MoveToTargetTask(ITargetMover mover)
         {
             _targetMover = mover;
-            _targetPosition = targetPosition;
         }
 
         public override NodeState Evaluate()
         {
-            _targetMover.MoveTo(_targetPosition);
+             GetData("Target");
+
+                _targetMover.MoveTo(_targetPosition);
 
             return NodeState.Running;
+        }
+    }
+
+    public sealed class FindTargetTask : BehaviourNode
+    {
+        private readonly Collider _collider;
+        private readonly float _range;
+        private readonly LayerMask _targetMask;
+        private TargetFinder _targetFinder;
+
+        public FindTargetTask(Collider collider ,float range, LayerMask targetMask)
+        {
+            _targetFinder = new TargetFinder();
+            _collider = collider;
+            _range = range;
+            _targetMask = targetMask;
+        }
+
+        public override NodeState Evaluate()
+        {
+            if (!_targetFinder.FindNearestTarget(_collider, _range, _targetMask, out var target))
+                return NodeState.Failure;
+
+            
+            return NodeState.Success;
         }
     }
 }

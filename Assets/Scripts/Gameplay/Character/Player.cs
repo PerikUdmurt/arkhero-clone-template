@@ -9,7 +9,7 @@ using UnityEngine;
 namespace ArkheroClone.Gameplay.Characters
 {
     [RequireComponent(typeof(Collider))]
-    public class Player : Character, IDamagable
+    public sealed class Player : Character, IDamagable
     {
         private Health _health;
         private IMovable _movementController;
@@ -43,5 +43,11 @@ namespace ArkheroClone.Gameplay.Characters
         {
             ((IDamagable)_health).GetDamage(damage);
         }
+
+        private void OnEnable()
+            => _health.OnLowHealth += Despawn;
+
+        private void OnDisable()
+            => _health.OnLowHealth -= Despawn;
     }
 }

@@ -19,7 +19,6 @@ namespace ArkheroClone.Gameplay.Characters.Behaviours
             if (_inputService.GetDirection().magnitude == 0)
                 return NodeState.Failure;
                 
-            Debug.Log("Move");
             _movable.Move(_inputService.GetDirection(), Time.deltaTime);
             return NodeState.Running;
         }

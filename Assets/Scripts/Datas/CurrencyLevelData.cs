@@ -5,11 +5,23 @@ namespace ArkheroClone.Datas
 {
     public class CurrencyLevelData
     {
-        List<Character> Enemies;
+        private List<Character> _characters;
 
         public CurrencyLevelData() 
         { 
-            Enemies = new List<Character>();
+            _characters = new List<Character>();
         }
+
+        public List<Character> Characters { get => _characters; }
+
+        public void AddCharacter(Character player)
+            => _characters.Add(player);
+
+        public void RemoveCharacter(Character player)
+        {
+            if (_characters.Contains(player))
+                _characters.Remove(player);
+        }
+
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ArkheroClone.Gameplay.Characters.Behaviours
 {
-    public class StayAndShootTask : BehaviourNode
+    public sealed class StayAndShootTask : BehaviourNode
     {
         private readonly IShooter _shooter;
 

@@ -11,7 +11,7 @@ namespace ArkheroClone.Gameplay.Characters
 {
     [RequireComponent(typeof(Collider))] 
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Enemy : Character, IDamagable
+    public class Enemy : Character, IDamagable, ITargetMover
     {
         private Health _health;
         private IShooter _shooter;
@@ -24,16 +24,6 @@ namespace ArkheroClone.Gameplay.Characters
             _collider = GetComponent<Collider>();
             _health = new(staticData.Health);
             _shooter = new Shooter<Bullet>(bundleProvider, staticData.gunStaticData);
-        }
-
-        private void OnEnable()
-        {
-            _health.OnLowHealth += Despawn;
-        }
-
-        private void OnDisable()
-        {
-            _health.OnLowHealth -= Despawn;
         }
 
         public override BehaviourNode SetupBehaviours()
@@ -49,8 +39,15 @@ namespace ArkheroClone.Gameplay.Characters
         }
 
         public void GetDamage(int damage)
-        {
-            ((IDamagable)_health).GetDamage(damage);
-        }
+            => ((IDamagable)_health).GetDamage(damage);
+
+        public void MoveTo(Vector3 position)
+            => _navAgent.SetDestination(position);
+
+        private void OnEnable()
+            => _health.OnLowHealth += Despawn;
+
+        private void OnDisable()
+            => _health.OnLowHealth -= Despawn;
     }
 }

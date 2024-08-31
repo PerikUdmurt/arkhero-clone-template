@@ -19,6 +19,9 @@ public class SceneInstaller : MonoBehaviour
     [SerializeField]
     private Vector3 _playerSpawnPosition;
 
+    [SerializeField]
+    private List<Transform> _enemiesSpawnPoints;
+
     private DiContainer _sceneContainer;
     public DiContainer GetSceneInstaller(DiContainer projectContainer)
     {
@@ -31,6 +34,7 @@ public class SceneInstaller : MonoBehaviour
     {
         _sceneContainer.RegisterInstance(_platformAssetRefs, "PlatformAssetRefs");
         _sceneContainer.RegisterInstance(_platformSpawnPoints, "PlatformSpawnPoints");
+        _sceneContainer.RegisterInstance(_enemiesSpawnPoints, "EnemiesSpawnPoints");
         _sceneContainer.RegisterInstance(_navMeshSurface);
         _sceneContainer.RegisterInstance(_playerSpawnPosition, "PlayerSpawnPosition");
     }

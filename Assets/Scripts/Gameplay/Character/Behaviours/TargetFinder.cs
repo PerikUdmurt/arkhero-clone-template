@@ -23,6 +23,16 @@ public class TargetFinder
         return true;
     }
 
+    public bool FindNearestTarget(Collider collider, float range, LayerMask targetLayer, out GameObject target)
+    {
+        target = null;
+        List<Collider> colliders = FindAllColliders(collider, range, targetLayer);
+        if (colliders.Count == 0) return false;
+
+        target = colliders.First().gameObject;
+        return true;
+    }
+
     private List<Collider> FindAllColliders(Collider collider, float range, LayerMask layerMask)
     {
         Collider[] colliders = Physics.OverlapSphere(collider.bounds.center, range, layerMask);

@@ -47,12 +47,13 @@ namespace ArkheroClone.Infrastructure.StateMachine
         private async void OnLoaded()
         {
             _sceneContainer = GetSceneContainer();
-            RegisterCharacterSpawner();
             CreateCurrencyLevelData();
+            RegisterCharacterSpawner();
             List<UniTask> tasks = new List<UniTask>()
             {
                 SpawnPlatformsAsync(),
-                SpawnPlayer()
+                SpawnPlayer(),
+                SpawnEnemies()
             };
             await UniTask.WhenAll(tasks);
             RebakeNavMeshSurface();
@@ -69,6 +70,17 @@ namespace ArkheroClone.Infrastructure.StateMachine
             GameObject obj = GameObject.FindGameObjectsWithTag("SceneContainer").First();
             SceneInstaller sceneContainer = obj.GetComponent<SceneInstaller>();
             return sceneContainer.GetSceneInstaller(_sessionContainer);
+        }
+
+        private async UniTask SpawnEnemies()
+        {
+            CharacterSpawner spawner = _sceneContainer.Resolve<CharacterSpawner>();
+            List<Transform> spawnPoints = _sceneContainer.Resolve<List<Transform>>("EnemiesSpawnPoints");
+
+            foreach (Transform spawnPoint in spawnPoints)
+            {
+                await spawner.CreateEnemyAsync(EnemyType.WalkingEnemy, spawnPoint.position);
+            }
         }
 
         private void RegisterCharacterSpawner()
@@ -99,7 +111,7 @@ namespace ArkheroClone.Infrastructure.StateMachine
         {
             CurrencyLevelData currencyLevelData = new CurrencyLevelData();
 
-            _sceneContainer.RegisterInstance<CurrencyLevelData>(currencyLevelData);
+            _sceneContainer.RegisterInstance(currencyLevelData);
         }
     }
 }

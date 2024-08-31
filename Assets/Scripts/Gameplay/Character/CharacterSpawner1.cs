@@ -1,4 +1,5 @@
-﻿using ArkheroClone.Infrastructure.Bundles;
+﻿using ArkheroClone.Datas;
+using ArkheroClone.Infrastructure.Bundles;
 using ArkheroClone.Infrastructure.Factory;
 using ArkheroClone.Services;
 using ArkheroClone.Services.DI;
@@ -8,19 +9,23 @@ using UnityEngine;
 
 namespace ArkheroClone.Gameplay.Characters
 {
-    public class CharacterSpawner
+    public sealed class CharacterSpawner
     {
-        public AbstractFactory<Character> _factory;
-        public IStaticDataService _staticDataService;
-        public IBundleProvider _bundleProvider;
-        public InputService _inputService;
+        private readonly AbstractFactory<Character> _factory;
+        private readonly IStaticDataService _staticDataService;
+        private readonly IBundleProvider _bundleProvider;
+        private readonly InputService _inputService;
+        private readonly CurrencyLevelData _currencyLevelData;
+        private readonly DiContainer _container;
 
         public CharacterSpawner(DiContainer container)
         {
+            _currencyLevelData = container.Resolve<CurrencyLevelData>();
             _inputService = container.Resolve<InputService>();
             _staticDataService = container.Resolve<IStaticDataService>();
             _bundleProvider = container.Resolve<IBundleProvider>();
             _factory = new AbstractFactory<Character>(_bundleProvider);
+            _container = container;
         }
 
         public async UniTask<Player> CreateHeroAsync(Vector3 atPosition)
@@ -37,7 +42,6 @@ namespace ArkheroClone.Gameplay.Characters
             _staticDataService.GetStaticData(enemyType.ToString(), out EnemyStaticData heroStaticData);
             Enemy hero = await CreateCharacterAsync(atPosition, heroStaticData) as Enemy;
             hero.Construct(heroStaticData, _bundleProvider);
-            
             return hero;
         }
 
@@ -46,12 +50,14 @@ namespace ArkheroClone.Gameplay.Characters
             Character hero = await _factory.CreateAsync(heroStaticData.CharacterAsset);
             hero.transform.position = atPosition;
             hero.OnDespawn += DespawnCharacter;
+            _currencyLevelData.AddCharacter(hero);
             return hero;
         }
 
         private void DespawnCharacter(Character character)
         {
             character.OnDespawn -= DespawnCharacter;
+            _currencyLevelData.RemoveCharacter(character);
             GameObject.Destroy(character.gameObject);
         }
     }
