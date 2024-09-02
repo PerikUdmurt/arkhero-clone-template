@@ -8,13 +8,13 @@ namespace ArkheroClone.Gameplay.Characters
     {
         private BehaviourTree _behaviourTree;
 
-        public event Action<Character> OnDespawn;
+        public abstract event Action<Character> Died;
 
         public abstract BehaviourNode SetupBehaviours();
 
-        public virtual void Despawn()
+        private void Awake()
         {
-            OnDespawn?.Invoke(this);
+            this.enabled = false;
         }
 
         private void Start()

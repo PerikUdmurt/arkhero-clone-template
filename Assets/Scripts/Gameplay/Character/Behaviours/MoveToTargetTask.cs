@@ -42,7 +42,6 @@ namespace ArkheroClone.Gameplay.Characters.Behaviours
         {
             if (!_targetFinder.FindNearestTarget(_collider, _range, _targetMask, out var target))
                 return NodeState.Failure;
-
             
             return NodeState.Success;
         }

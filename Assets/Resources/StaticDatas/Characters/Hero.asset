@@ -15,7 +15,10 @@ MonoBehaviour:
   HeroName: Hero
   Speed: 5
   Health: 100
-  gunStaticData: {fileID: 11400000, guid: 4c70470aaac2a434eb5a605d6e53bab9, type: 2}
+  TargetLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  GunStaticData: {fileID: 11400000, guid: 4c70470aaac2a434eb5a605d6e53bab9, type: 2}
   CharacterAsset:
     m_AssetGUID: 00f382db7b6c4f042a268a654ddacb48
     m_SubObjectName: 

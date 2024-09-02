@@ -13,8 +13,9 @@ namespace ArkheroClone.StaticDatas
         public string HeroName = "NewCharacter";
         public float Speed = 5.0f;
         public int Health = 100;
+        public LayerMask TargetLayers;
 
-        public GunStaticData gunStaticData;
+        public GunStaticData GunStaticData;
 
         [Header("AssetReference")]
         public AssetReference CharacterAsset;

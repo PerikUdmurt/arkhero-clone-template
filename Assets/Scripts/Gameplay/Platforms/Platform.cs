@@ -12,8 +12,6 @@ namespace ArkheroClone.Gameplay.Platforms
         [SerializeField]
         private Vector3 _initialPosition;
 
-        public event Action AnimationCompleted;
-
         public void Init(Transform spawnPoint)
         {
             PlayAnimation(_initialPosition, spawnPoint, _animationSpeed);
@@ -26,8 +24,6 @@ namespace ArkheroClone.Gameplay.Platforms
             sequence.Append(transform.DOMove(endTransform.position, animationSpeed)).
                 Join(transform.DORotate(endTransform.rotation.eulerAngles, animationSpeed).
                 SetEase(Ease.InCirc));
-
-            sequence.onComplete = () => { AnimationCompleted.Invoke(); };
 
             sequence.Play();
         }

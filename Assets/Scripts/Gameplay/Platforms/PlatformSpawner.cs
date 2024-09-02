@@ -18,31 +18,19 @@ namespace ArkheroClone.Gameplay.Platforms
 
         public async UniTask CreateRandomPlatformsAsync(List<Transform> spawnPoints, List<AssetReference> platformRefs)
         {
-            List<UniTask> tasks = new();
-
             foreach (Transform point in spawnPoints)
             {
                 AssetReference asset = GetRandomAssetRef(platformRefs);
-                tasks.Add(CreatePlatformAsync(asset, point));
+                await CreatePlatformAsync(asset, point);
             }
-
-            await UniTask.WhenAll(tasks);
         }
 
         private async UniTask<Platform> CreatePlatformAsync(AssetReference asset, Transform spawnPoint)
         {
             Platform platform = await _factory.CreateAsync(asset);
             platform.Init(spawnPoint);
-            await WaitAnimation(platform);
             return platform;
 
-        }
-
-        private UniTask WaitAnimation(Platform platform)
-        {
-            var tcs = new UniTaskCompletionSource();
-            platform.AnimationCompleted += () => tcs.TrySetResult();
-            return tcs.Task;
         }
 
 

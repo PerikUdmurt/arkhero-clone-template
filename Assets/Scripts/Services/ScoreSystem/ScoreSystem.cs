@@ -11,6 +11,8 @@ namespace ArkheroClone.Services.Scores
             _totalScore = initialScore;
         }
 
+        public int Score { get => _totalScore; }
+        
         public event Action<int> ScoreChanged;
 
         public int GetScore() => _totalScore;

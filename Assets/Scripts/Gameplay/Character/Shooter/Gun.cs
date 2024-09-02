@@ -11,18 +11,17 @@ namespace ArkheroClone.Gameplay.Characters.Shooting
         public Gun(IBundleProvider bundleProvider, GunStaticData gunStaticData)
         {
             _bulletPool = new ObjectPool<TBullet>(bundleProvider, gunStaticData.BulletReference);
-            
         }
 
         public async void Shoot(Vector3 target)
         {
             TBullet bullet = await _bulletPool.Get();
-
+            bullet.OnCollision += ReleaseBullet;
         }
 
-        public void ReleaseBullet(TBullet bullet)
+        public void ReleaseBullet(BaseBullet bullet)
         {
-            _bulletPool.Release(bullet);
+            _bulletPool.Release((TBullet)bullet);
         }
     }
 }

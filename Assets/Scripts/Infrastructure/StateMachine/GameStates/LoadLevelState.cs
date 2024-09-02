@@ -2,8 +2,13 @@ using ArkheroClone.Datas;
 using ArkheroClone.Gameplay.Characters;
 using ArkheroClone.Gameplay.Platforms;
 using ArkheroClone.Infrastructure.Bundles;
+using ArkheroClone.Infrastructure.Factory;
+using ArkheroClone.Infrastructure.Timer;
 using ArkheroClone.Services.DI;
 using ArkheroClone.Services.SceneLoader;
+using ArkheroClone.Services.Scores;
+using ArkheroClone.UI.Presenter;
+using ArkheroClone.UI.View;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +18,7 @@ using UnityEngine.AddressableAssets;
 
 namespace ArkheroClone.Infrastructure.StateMachine
 {
-    public class LoadLevelState : IPayloadedState<LevelPayload>
+    public sealed class LoadLevelState : IPayloadedState<LevelPayload>
     {
         private readonly GameStateMachine _gameStateMachine;
         private DiContainer _sessionContainer;
@@ -49,12 +54,14 @@ namespace ArkheroClone.Infrastructure.StateMachine
             _sceneContainer = GetSceneContainer();
             CreateCurrencyLevelData();
             RegisterCharacterSpawner();
+            RegisterCustomTimer();
             List<UniTask> tasks = new List<UniTask>()
             {
                 SpawnPlatformsAsync(),
                 SpawnPlayer(),
                 SpawnEnemies()
             };
+            await InstantiateHUDAsync();
             await UniTask.WhenAll(tasks);
             RebakeNavMeshSurface();
             _gameStateMachine.Enter<GameLoopState, DiContainer>(_sceneContainer);
@@ -63,6 +70,29 @@ namespace ArkheroClone.Infrastructure.StateMachine
         public void Exit()
         {
             
+        }
+
+        private void RegisterCustomTimer()
+        {
+            CustomTimer customTimer = new CustomTimer();
+            _sceneContainer.RegisterInstance<CustomTimer>(customTimer);
+        }
+
+        private async UniTask InstantiateHUDAsync()
+        {
+            Factory<HUDRoot> hudFactory = new Factory<HUDRoot>
+                (
+                bundleProvider: _sceneContainer.Resolve<IBundleProvider>(),
+                bundlePath: BundlePath.HUD
+                );
+
+            HUDRoot hud = await hudFactory.CreateAsync();
+            HUDPresenter hUDPresenter = new HUDPresenter
+                (hud, 
+                _sceneContainer.Resolve<ScoreSystem>(),
+                _sceneContainer.Resolve<Player>().Health,
+                _sceneContainer.Resolve<CustomTimer>(),
+                _sceneContainer.Resolve<InputService>());
         }
 
         private DiContainer GetSceneContainer()
@@ -79,7 +109,7 @@ namespace ArkheroClone.Infrastructure.StateMachine
 
             foreach (Transform spawnPoint in spawnPoints)
             {
-                await spawner.CreateEnemyAsync(EnemyType.WalkingEnemy, spawnPoint.position);
+                await spawner.CreateEnemyAsync(EnemyType.FlyingEnemy, spawnPoint.position);
             }
         }
 
@@ -93,7 +123,8 @@ namespace ArkheroClone.Infrastructure.StateMachine
         {
             CharacterSpawner spawner = _sceneContainer.Resolve<CharacterSpawner>();
             Vector3 playerSpawnPosition = _sceneContainer.Resolve<Vector3>("PlayerSpawnPosition");
-            await spawner.CreateHeroAsync(playerSpawnPosition);
+            Player player = await spawner.CreateHeroAsync(playerSpawnPosition);
+            _sceneContainer.RegisterInstance(player);
         }
 
         private async UniTask SpawnPlatformsAsync()

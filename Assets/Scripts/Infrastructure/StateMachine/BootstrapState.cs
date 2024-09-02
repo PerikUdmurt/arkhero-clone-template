@@ -4,6 +4,7 @@ using ArkheroClone.Services;
 using ArkheroClone.Services.DI;
 using ArkheroClone.Services.SceneLoader;
 using ArkheroClone.Services.StaticDatas;
+using ArkheroClone.UI.View;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -22,13 +23,12 @@ namespace ArkheroClone.Infrastructure.StateMachine
             _projectContainer = projectContainer;
         }
 
-        public async void Enter()
+        public void Enter()
         {
             RegisterCourutineRunner();
             RegisterSceneLoaderService();
             RegisterBundleProvider();
             RegisterStaticDataServices();
-            await InstantiateHUDAsync();
             RegisterInputs();
             _gameStateMachine.Enter<MainMenuState>();
         }
@@ -59,28 +59,14 @@ namespace ArkheroClone.Infrastructure.StateMachine
             _projectContainer.RegisterInstance(assetProvider);
         }
 
-        private async UniTask InstantiateHUDAsync()
-        {
-            Factory<HUDRoot> hudFactory = new Factory<HUDRoot>
-                (
-                bundleProvider: _projectContainer.Resolve<IBundleProvider>(),
-                bundlePath: BundlePath.HUD
-                );
-
-             HUDRoot hud = await hudFactory.CreateAsync();
-            
-            _projectContainer.RegisterInstance(hud);
-        }
-
         private void RegisterInputs()
         {
-            RegisterDesktopInputService();   
+            RegisterMobileInputService();  
         }
 
         private void RegisterMobileInputService()
         {
-            Joystick joystick = _projectContainer.Resolve<HUDRoot>().GetJoystick();
-            InputService inputService = new MobileInputService(joystick);
+            InputService inputService = new MobileInputService();
             _projectContainer.RegisterInstance(inputService);
         }
 

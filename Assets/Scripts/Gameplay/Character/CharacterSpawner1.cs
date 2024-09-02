@@ -49,14 +49,14 @@ namespace ArkheroClone.Gameplay.Characters
         {
             Character hero = await _factory.CreateAsync(heroStaticData.CharacterAsset);
             hero.transform.position = atPosition;
-            hero.OnDespawn += DespawnCharacter;
+            hero.Died += DespawnCharacter;
             _currencyLevelData.AddCharacter(hero);
             return hero;
         }
 
         private void DespawnCharacter(Character character)
         {
-            character.OnDespawn -= DespawnCharacter;
+            character.Died -= DespawnCharacter;
             _currencyLevelData.RemoveCharacter(character);
             GameObject.Destroy(character.gameObject);
         }

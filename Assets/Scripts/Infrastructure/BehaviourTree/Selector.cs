@@ -5,7 +5,7 @@ namespace ArkheroClone.Infrastructure.BehaviourTree
     public class Selector : BehaviourNode
     {
         public Selector() : base() { }
-        public Selector(List<BaseNode> nodes) : base(nodes) { }
+        public Selector(List<BehaviourNode> nodes) : base(nodes) { }
 
         public override NodeState Evaluate()
         {

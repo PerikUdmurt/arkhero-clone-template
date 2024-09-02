@@ -15,8 +15,9 @@ namespace ArkheroClone.Gameplay.Characters.Behaviours
 
         public override NodeState Evaluate()
         {
-            Collider target = (Collider)GetData("visibleTarget");
-            _shooter.Shoot(target.bounds.center);
+            GameObject target = GetData("visibleTarget") as GameObject;
+
+            _shooter.Shoot(target.transform.position);
             return NodeState.Running;
         }
     }

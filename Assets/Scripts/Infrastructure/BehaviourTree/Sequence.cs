@@ -5,7 +5,7 @@ namespace ArkheroClone.Infrastructure.BehaviourTree
     public sealed class Sequence : BehaviourNode
     {
         public Sequence() : base() { }
-        public Sequence(List<BaseNode> nodes) : base(nodes) { }
+        public Sequence(List<BehaviourNode> nodes) : base(nodes) { }
         public override NodeState Evaluate()
         {
             bool anyChildIsRunning = false;
