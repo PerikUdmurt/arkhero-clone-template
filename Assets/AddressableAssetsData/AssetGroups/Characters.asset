@@ -22,6 +22,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: db6d8a19e2c707049a91d0495df3fac2
+    m_Address: FlyingEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f4abc93b3e688c848b084b18ac307988
     m_Address: ShootingEnemy
     m_ReadOnly: 0

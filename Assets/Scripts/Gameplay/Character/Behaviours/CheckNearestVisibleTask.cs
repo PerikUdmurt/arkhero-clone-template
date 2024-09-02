@@ -28,9 +28,7 @@ namespace ArkheroClone.Gameplay.Characters.Behaviours
                     return NodeState.Failure;
             }
 
-            CheckDistanceToTarget();
-
-            return NodeState.Failure;
+            return CheckDistanceToTarget();
         }
 
         public bool FindNearestTarget()
@@ -51,6 +49,7 @@ namespace ArkheroClone.Gameplay.Characters.Behaviours
 
             if (distance > _range)
             {
+                Debug.Log("ClearData");
                 Parent.ClearData("visibleTarget");
                 _target = null;
                 return NodeState.Failure;

@@ -35,7 +35,7 @@ namespace ArkheroClone.Gameplay.Characters
             _health.OnLowHealth += OnDied;
             _movementController = new MovementController(transform, staticData.Speed);
             _inputService = inputService;
-            _shooter = new Shooter<Bullet>(bundleProvider, staticData.GunStaticData);
+            _shooter = new Shooter(bundleProvider, _gunPoint, staticData.GunStaticData);
             _collider = GetComponent<Collider>();
         }
 
@@ -47,13 +47,13 @@ namespace ArkheroClone.Gameplay.Characters
                 new Sequence(new List<BehaviourNode>
                 {
                     new CheckNearestVisibleTask(_collider, 10, _layerMask),
-                    new StayAndShootTask(_shooter)
+                    new StayAndShootTask(transform, _shooter)
                 })
             });
         }
 
         public void GetDamage(int damage)
-            => ((IDamagable)_health).GetDamage(damage);
+            => _health.GetDamage(damage);
 
         public void OnDied()
             => Died?.Invoke(this);

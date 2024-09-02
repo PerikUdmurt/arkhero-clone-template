@@ -6,8 +6,6 @@ namespace ArkheroClone.Datas
     {
         public int damage;
         public float speed;
-        public Vector3 direction;
-        public LayerMask targetLayer;
         public bool piercing;
     }
 }

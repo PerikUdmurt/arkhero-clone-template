@@ -4,7 +4,7 @@ namespace ArkheroClone.Gameplay.Characters
 {
     public interface IMovable
     {
-        public void Move(Vector2 direction, float deltaTime);
+        public void Move(Vector3 direction, float deltaTime);
         void SetSpeed(float newSpeed);
     }
 }

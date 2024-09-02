@@ -26,9 +26,10 @@ namespace ArkheroClone.Gameplay.Characters
         public void Construct(EnemyStaticData staticData, IBundleProvider bundleProvider)
         {
             _navAgent = GetComponent<NavMeshAgent>();
+            _navAgent.speed = staticData.Speed;
             _collider = GetComponent<Collider>();
             _health = new(staticData.Health);
-            _shooter = new Shooter<Bullet>(bundleProvider, staticData.GunStaticData);
+            _shooter = new Shooter(bundleProvider, _gunPoint, staticData.GunStaticData);
         }
 
         public override BehaviourNode SetupBehaviours()
@@ -47,7 +48,7 @@ namespace ArkheroClone.Gameplay.Characters
         }
 
         public void GetDamage(int damage)
-            => ((IDamagable)_health).GetDamage(damage);
+            => _health.GetDamage(damage);
 
         public void MoveTo(Vector3 position)
             => _navAgent.SetDestination(position);

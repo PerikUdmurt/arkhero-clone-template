@@ -16,7 +16,7 @@ namespace ArkheroClone.Gameplay.Characters
         public void SetSpeed(float newSpeed)
             => _speed = newSpeed;
 
-        public void Move(Vector2 direction, float deltaTime)
+        public void Move(Vector3 direction, float deltaTime)
         {
             Vector3 lookDirection = _transform.position + new Vector3(direction.x, 0, direction.y);
             _transform.LookAt(lookDirection);

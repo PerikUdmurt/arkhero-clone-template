@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: DefaultGun
   m_EditorClassIdentifier: 
   GunName: NewGun
-  Damage: 0
-  NumOfProjectile: 0
-  ShootCoolDown: 0
-  BulletSpeed: 0
+  Damage: 10
+  NumOfProjectile: 1
+  ShootCoolDown: 0.5
+  BulletSpeed: 6
   Piercing: 0
   BulletReference:
     m_AssetGUID: d17412684b78e704bbd9f8953506127c

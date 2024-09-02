@@ -4,13 +4,12 @@ using UnityEngine;
 
 namespace ArkheroClone.Gameplay.Characters.Shooting
 {
-    public class Shooter<TBullet>: IShooter where TBullet : BaseBullet
+    public class Shooter: IShooter
     {
-        private Gun<TBullet> _gun;
-
-        public Shooter(IBundleProvider bundleProvider, GunStaticData gunData) 
+        private BaseGun _gun;
+        public Shooter(IBundleProvider bundleProvider, Transform gunPoint, GunStaticData gunData) 
         {
-            _gun = new Gun<TBullet>(bundleProvider, gunData);
+            _gun = new DefaultGun(bundleProvider, gunPoint, gunData);
         }
 
         public void Shoot(Vector3 target)
